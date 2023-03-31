@@ -10,6 +10,7 @@ local hook = Hooks.new(Roact)
 local function PrintingButton(_props, hooks)
 	local counter, setCounter = hooks.useState(0)
 	local lonerCounter, setLonerCounter = hooks.useState(0)
+	local superLonerCounter, setSuperLonerCounter = hooks.useState(0)
 
 	hooks.useEffect(function()
 		print("current counter is", counter)
@@ -22,6 +23,14 @@ local function PrintingButton(_props, hooks)
 	hooks.useEffect(function()
 		print("loner counter is", lonerCounter)
 	end, { lonerCounter })
+
+	hooks.useEffect(function()
+		print("current super loner counter is", superLonerCounter)
+
+		return function()
+			print("the final super loner counter is", superLonerCounter)
+		end
+	end, { superLonerCounter }, true)
 
 	hooks.useEffect(function()
 		print("i only run once")
@@ -60,6 +69,19 @@ local function PrintingButton(_props, hooks)
 			TextScaled = true,
 			[Roact.Event.Activated] = function()
 				setLonerCounter(lonerCounter + 1)
+			end,
+		}),
+
+		SuperLonerCounter = e("TextButton", {
+			BackgroundColor3 = Color3.new(0, 0, 0),
+			Font = Enum.Font.Code,
+			LayoutOrder = 2,
+			Size = UDim2.new(1, 0, 0, 38),
+			Text = "I'll print the total when I'm done",
+			TextColor3 = Color3.new(1, 1, 1),
+			TextScaled = true,
+			[Roact.Event.Activated] = function()
+				setSuperLonerCounter(superLonerCounter + 1)
 			end,
 		}),
 	})

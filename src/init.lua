@@ -91,7 +91,7 @@ function Hooks.new<Props>(roact)
 					continue
 				end
 
-				local effect, dependsOn = unpack(effectData)
+				local effect, dependsOn, onlyDestructOnUnmount = unpack(effectData)
 
 				if dependsOn ~= nil then
 					local lastDependencies = self.effectDependencies[index]
@@ -103,7 +103,7 @@ function Hooks.new<Props>(roact)
 				end
 
 				local unmountEffect = self.unmountEffects[index]
-				if unmountEffect ~= nil then
+				if unmountEffect ~= nil and not onlyDestructOnUnmount then
 					unmountEffect()
 				end
 

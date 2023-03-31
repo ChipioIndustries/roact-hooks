@@ -3,8 +3,9 @@ type EffectCallback = (() -> Destructor) | (() -> ())
 type DependencyList = { unknown }
 
 local function createUseEffect(component)
-	return function(callback: EffectCallback, dependsOn: DependencyList?)
+	return function(callback: EffectCallback, dependsOn: DependencyList?, onlyDestructOnUnmount: boolean?)
 		assert(typeof(callback) == "function", "useEffect callback is not a function")
+		onlyDestructOnUnmount = onlyDestructOnUnmount or false
 
 		component.hookCounter += 1
 		local hookCount = component.hookCounter
@@ -12,7 +13,7 @@ local function createUseEffect(component)
 		-- TODO: This mutates the component in the middle of render. That's bad, right?
 		-- It's idempotent, so it shouldn't matter.
 		-- Is there a way to do this that keeps `render` truly pure?
-		component.effects[hookCount] = { callback, dependsOn }
+		component.effects[hookCount] = { callback, dependsOn, onlyDestructOnUnmount }
 	end
 end
 
